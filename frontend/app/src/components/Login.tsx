@@ -1,19 +1,27 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
-const Login: React.FC = () => {
+interface LoginProps {
+  apiUrl: string; // APIのベースURLを親から受け取る
+}
+const Login: React.FC<LoginProps> = ({apiUrl}) => {
   // 状態管理: 型を明確にする
   const [email, setEmail] = useState<string>(''); // username を email に変更
   const [password, setPassword] = useState<string>('');
+
+
 
   // ログイン処理関数
   const handleLogin = async () => {
     try {
       const response = await axios.post<{ access: string; refresh: string }>(
-        'http://localhost:8000/api/token/',
+        `${apiUrl}/api/token/`,
         { email, password },
         { headers: { 'Content-Type': 'application/json' } } // ヘッダーを明示的に指定
       );
+
+      // ローカルストレージにトークンを保存
+      localStorage.setItem("accessToken", response.data.access);
+      localStorage.setItem("refreshToken", response.data.refresh);
   
       // トークンをログに出力（後で保存処理を追加する）
       console.log('Access Token:', response.data.access);

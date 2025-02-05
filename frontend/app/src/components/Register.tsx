@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const Register: React.FC = () => {
+interface RegisterProps {
+  apiUrl: string; // APIのベースURLを親から受け取る
+}
+
+const Register: React.FC<RegisterProps> = ({apiUrl}) => {
   // 状態管理: 型を明確にする
   const [email, setEmail] = useState<string>(''); // username を email に変更
   const [password, setPassword] = useState<string>('');
@@ -10,7 +14,7 @@ const Register: React.FC = () => {
   const handleRegister = async () => {
     try {
       // リクエストの型とレスポンスの型を定義
-      const response = await axios.post<{ message: string }>('http://localhost:8000/api/register/', {
+      const response = await axios.post<{ message: string }>(`${apiUrl}/api/register/`, {
         email, // フィールド名を email に変更
         password,
       });
